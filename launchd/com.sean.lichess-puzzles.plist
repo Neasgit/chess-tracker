@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.sean.lichess-puzzles</string>
+
+  <!-- Run every 10 minutes -->
+  <key>StartInterval</key><integer>600</integer>
+
+  <!-- Where the job will run -->
+  <key>WorkingDirectory</key><string>/Users/sean/Projects/Chess</string>
+
+  <!-- Force unbuffered Python so logs show up immediately -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/sean/Projects/Chess/.venv/bin/python</string>
+    <string>-u</string>
+    <string>update.py</string>
+  </array>
+
+  <!-- Optional, belts-and-braces: also set env var -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PYTHONUNBUFFERED</key><string>1</string>
+  </dict>
+
+  <!-- Keep logs -->
+  <key>StandardOutPath</key><string>/Users/sean/Projects/Chess/logs/launchd.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/sean/Projects/Chess/logs/launchd.err.log</string>
+
+  <!-- Run once immediately on load -->
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>
