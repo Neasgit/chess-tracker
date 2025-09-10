@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Lichess Puzzle Report — 2025-09-10</title>
+<style>
+:root { --bg:#fff; --fg:#0f172a; --muted:#64748b; --border:#e2e8f0; --row:#f8fafc; --accent:#2563eb; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans"; }
+.layout { display:grid; grid-template-columns: 220px 1fr; min-height:100vh; }
+aside { position:sticky; top:0; height:100vh; border-right:1px solid var(--border); padding:16px; }
+aside h2 { margin:0 0 8px; font-size:14px; color:var(--muted); }
+nav a { display:block; padding:6px 8px; border-radius:6px; text-decoration:none; color:inherit; }
+nav a:hover { background:#f1f5f9; }
+main { padding:24px; max-width:1200px; margin:0 auto; }
+h1 { font-size:28px; margin:0 0 12px; }
+h2 { font-size:20px; margin:22px 0 8px; }
+.kpis{display:grid; grid-template-columns:repeat(4, minmax(220px,1fr)); gap:12px; margin:16px 0;}
+.kpi{border:1px solid var(--border); border-radius:10px; padding:12px;}
+.kpi .label{color:var(--muted); font-size:12px;} .kpi .value{font-size:22px; font-weight:600;}
+.controls{display:flex; gap:8px; align-items:center; margin:8px 0 16px; flex-wrap:wrap;}
+.controls input[type="text"]{padding:6px 8px; border:1px solid var(--border); border-radius:6px;}
+.controls button, .controls select, .controls label{padding:6px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; cursor:pointer;}
+.controls button:hover{background:#f8fafc;}
+table{ width:100%; border-collapse:collapse; margin:8px 0 16px; table-layout:auto; }
+th,td{ border:1px solid var(--border); padding:8px 10px; vertical-align:top; }
+thead th{ background:#f1f5f9; position:sticky; top:0; z-index:1; }
+tbody tr:nth-child(even){ background:var(--row); }
+a{ color:var(--accent); text-decoration:none; } a:hover{ text-decoration:underline; }
+.small{font-size:12px; color:var(--muted);}
+td,th{ font-variant-numeric: tabular-nums; }
+.pager{display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin:-6px 0 12px;}
+.pager button{padding:4px 8px; border:1px solid var(--border); border-radius:6px; background:#fff; cursor:pointer;}
+.pager button.active{background:#e2e8f0;}
+.pager button:disabled{opacity:.5; cursor:not-allowed;}
+
+/* center numeric Attempts, keep Theme left/wrapped */
+#due-today table th:nth-child(3),  #due-today table td:nth-child(3),
+#due-plus1 table th:nth-child(3),  #due-plus1 table td:nth-child(3),
+#due-p7    table th:nth-child(3),  #due-p7    table td:nth-child(3),
+#due-later table th:nth-child(3),  #due-later table td:nth-child(3),
+#missed    table th:nth-child(3),  #missed    table td:nth-child(3) { text-align:center; }
+#due-today table td:nth-child(2),
+#due-plus1 table td:nth-child(2),
+#due-p7    table td:nth-child(2),
+#due-later table td:nth-child(2),
+#missed    table td:nth-child(2) { text-align:left; white-space:normal; overflow-wrap:anywhere; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h2>Navigation</h2>
+    <nav>
+      <a href="index.html">Overall Tracker →</a>
+      <a href="#kpis">Stats</a>
+      <a href="#due-today">Due Today</a>
+      
+      <a href="#themes-top">Top Themes (90d)</a>
+      <a href="#themes-struggle">Struggle Themes (90d)</a>
+      <a href="#missed">Missed (30d)</a>
+      <a href="#due-plus1">+1 Day</a>
+      <a href="#due-p7">+2–7 Days</a>
+      <a href="#due-later">Later</a>
+    </nav>
+  </aside>
+  <main>
+    <section id="kpis">
+      <h1>Lichess Puzzle Report — 2025-09-10</h1>
+      <div class="kpis">
+        <div class="kpi"><div class="label">All-time attempts</div><div class="value">651</div></div>
+        <div class="kpi"><div class="label">All-time accuracy</div><div class="value">73.3%</div></div>
+        <div class="kpi"><div class="label">Last 7 days accuracy</div><div class="value">73.3%</div></div>
+        <div class="kpi"><div class="label">Last 30 days accuracy</div><div class="value">73.3%</div></div>
+      </div>
+    </section>
+
+    <section id="due-today">
+      <h2>Due Today (15)</h2>
+      <div class="controls" data-for="due-today">
+        <input type="text" placeholder="Filter (theme or ID)"/>
+        <label><input type="checkbox" id="shuffle-due"> Shuffle</label>
+        <select id="batch-n"><option>5</option><option selected>10</option><option>20</option><option>50</option></select>
+        <button data-open="first">Start</button>
+        <button data-open="next">Next (from report)</button>
+        <button data-open="batch">Open batch</button>
+        <button data-reset>Reset</button>
+      </div>
+      <table id="due-today-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:6ch"><col style="width:auto"><col style="width:5ch"><col style="width:28ch"><col style="width:12ch"></colgroup><thead><tr><th>Puzzle</th><th>Theme</th><th>Attempts</th><th>Last Attempt</th><th>Due</th></tr></thead><tbody><tr><td><a href="https://lichess.org/training/LjYnH" target="_blank" rel="noopener">LjYnH</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>3</td><td>2025-09-09 16:57:06 (16h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/OWMrn" target="_blank" rel="noopener">OWMrn</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:27:51 (11h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/Reihy" target="_blank" rel="noopener">Reihy</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:28:10 (11h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/S81sg" target="_blank" rel="noopener">S81sg</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>4</td><td>2025-09-09 16:58:48 (16h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/aBSWL" target="_blank" rel="noopener">aBSWL</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 18:25:30 (15h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/aLJuc" target="_blank" rel="noopener">aLJuc</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-09 20:02:17 (13h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/fXCx3" target="_blank" rel="noopener">fXCx3</a></td><td>Endgame, Kingside Attack, mate, Mate in 2</td><td>2</td><td>2025-09-09 22:38:30 (10h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/fxXHs" target="_blank" rel="noopener">fxXHs</a></td><td>Crushing, Deflection, Endgame, Master</td><td>3</td><td>2025-09-09 16:59:41 (16h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/kIP5H" target="_blank" rel="noopener">kIP5H</a></td><td>mate, Mate in 1, One Move, Opening</td><td>4</td><td>2025-09-09 17:01:51 (16h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/lekBO" target="_blank" rel="noopener">lekBO</a></td><td>mate, Mate in 2, Opening, Short Tactic</td><td>2</td><td>2025-09-09 22:38:53 (10h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/nTTxr" target="_blank" rel="noopener">nTTxr</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:57:27 (10h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/oTcth" target="_blank" rel="noopener">oTcth</a></td><td>Crushing, Endgame, Master, pawnEndgame</td><td>3</td><td>2025-09-09 17:02:18 (16h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/qJvdS" target="_blank" rel="noopener">qJvdS</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-09 22:18:25 (11h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/sqyQH" target="_blank" rel="noopener">sqyQH</a></td><td>Hanging Piece, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-09 22:19:00 (11h ago)</td><td>2025-09-10</td></tr><tr><td><a href="https://lichess.org/training/wIl7C" target="_blank" rel="noopener">wIl7C</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>4</td><td>2025-09-09 17:03:03 (16h ago)</td><td>2025-09-10</td></tr></tbody></table><div class="pager"></div>
+    </section>
+
+    
+
+    <section id="themes-top"><h2>Top Themes (last 90 days)</h2><table id="themes-top-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:auto"><col style="width:6ch"><col style="width:8ch"></colgroup><thead><tr><th>Theme</th><th>Attempts</th><th>Accuracy</th></tr></thead><tbody><tr><td>mate</td><td>358</td><td>77.7%</td></tr><tr><td>Short Tactic</td><td>334</td><td>71.3%</td></tr><tr><td>Middlegame</td><td>293</td><td>73.0%</td></tr><tr><td>Endgame</td><td>266</td><td>75.9%</td></tr><tr><td>Mate in 1</td><td>213</td><td>78.9%</td></tr><tr><td>One Move</td><td>213</td><td>78.9%</td></tr><tr><td>Pin</td><td>196</td><td>79.6%</td></tr><tr><td>Advantage</td><td>142</td><td>67.6%</td></tr><tr><td>Crushing</td><td>133</td><td>65.4%</td></tr><tr><td>Mate in 2</td><td>130</td><td>76.2%</td></tr><tr><td>Fork</td><td>98</td><td>79.6%</td></tr><tr><td>Kingside Attack</td><td>83</td><td>71.1%</td></tr><tr><td>Long Tactic</td><td>81</td><td>64.2%</td></tr><tr><td>Master</td><td>79</td><td>74.7%</td></tr><tr><td>Opening</td><td>78</td><td>62.8%</td></tr><tr><td>Rook Endgame</td><td>27</td><td>74.1%</td></tr><tr><td>Deflection</td><td>25</td><td>56.0%</td></tr><tr><td>Exposed King</td><td>15</td><td>60.0%</td></tr><tr><td>discoveredAttack</td><td>14</td><td>50.0%</td></tr><tr><td>Mate in 3</td><td>14</td><td>71.4%</td></tr><tr><td>Queenside Attack</td><td>14</td><td>85.7%</td></tr><tr><td>sacrifice</td><td>14</td><td>78.6%</td></tr><tr><td>advancedPawn</td><td>13</td><td>69.2%</td></tr><tr><td>attackingF2F7</td><td>11</td><td>90.9%</td></tr><tr><td>Hanging Piece</td><td>11</td><td>72.7%</td></tr><tr><td>Smothered Mate</td><td>10</td><td>80.0%</td></tr><tr><td>Clearance</td><td>8</td><td>87.5%</td></tr><tr><td>Master vs Master</td><td>8</td><td>62.5%</td></tr><tr><td>promotion</td><td>7</td><td>57.1%</td></tr><tr><td>Queen+Rook Endgame</td><td>7</td><td>57.1%</td></tr><tr><td>attraction</td><td>6</td><td>66.7%</td></tr><tr><td>Defensive Move</td><td>6</td><td>83.3%</td></tr><tr><td>pawnEndgame</td><td>6</td><td>16.7%</td></tr><tr><td>Skewer</td><td>6</td><td>33.3%</td></tr><tr><td>Back-Rank Mate</td><td>5</td><td>100.0%</td></tr><tr><td>queenEndgame</td><td>5</td><td>100.0%</td></tr><tr><td>veryLong</td><td>5</td><td>60.0%</td></tr><tr><td>zugzwang</td><td>4</td><td>75.0%</td></tr><tr><td>capturingDefender</td><td>3</td><td>33.3%</td></tr><tr><td>bishopEndgame</td><td>2</td><td>50.0%</td></tr><tr><td>hookMate</td><td>2</td><td>100.0%</td></tr><tr><td>quietMove</td><td>2</td><td>50.0%</td></tr><tr><td>mateIn4</td><td>1</td><td>100.0%</td></tr><tr><td>trappedPiece</td><td>1</td><td>100.0%</td></tr><tr><td>xRayAttack</td><td>1</td><td>100.0%</td></tr></tbody></table><div class="pager"></div></section>
+    <section id="themes-struggle"><h2>Struggle Themes (last 90 days)</h2><table id="themes-struggle-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:auto"><col style="width:6ch"><col style="width:8ch"></colgroup><thead><tr><th>Theme</th><th>Attempts</th><th>Accuracy</th></tr></thead><tbody><tr><td>Deflection</td><td>25</td><td>56.0%</td></tr><tr><td>Exposed King</td><td>15</td><td>60.0%</td></tr><tr><td>discoveredAttack</td><td>14</td><td>50.0%</td></tr></tbody></table><div class="pager"></div></section>
+
+    <section id="missed">
+      <h2>Missed (last 30 days)</h2>
+      <div class="controls" data-for="missed">
+        <input type="text" placeholder="Filter (theme or ID)"/>
+      </div>
+      <table id="missed-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:6ch"><col style="width:auto"><col style="width:5ch"><col style="width:28ch"></colgroup><thead><tr><th>Puzzle</th><th>Theme</th><th>Attempts</th><th>When</th></tr></thead><tbody><tr><td><a href="https://lichess.org/training/4mZyf" target="_blank" rel="noopener">4mZyf</a></td><td>Crushing, discoveredAttack, Kingside Attack, Middlegame</td><td>1</td><td>2025-09-10 09:07:13 (29m ago)</td></tr><tr><td><a href="https://lichess.org/training/AuhTR" target="_blank" rel="noopener">AuhTR</a></td><td>Advantage, Fork, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:45:37 (50m ago)</td></tr><tr><td><a href="https://lichess.org/training/iVFoz" target="_blank" rel="noopener">iVFoz</a></td><td>Advantage, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:45:17 (51m ago)</td></tr><tr><td><a href="https://lichess.org/training/33oPp" target="_blank" rel="noopener">33oPp</a></td><td>Crushing, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:44:42 (51m ago)</td></tr><tr><td><a href="https://lichess.org/training/9etwQ" target="_blank" rel="noopener">9etwQ</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>1</td><td>2025-09-10 08:44:05 (52m ago)</td></tr><tr><td><a href="https://lichess.org/training/wlZLa" target="_blank" rel="noopener">wlZLa</a></td><td>Advantage, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:42:28 (53m ago)</td></tr><tr><td><a href="https://lichess.org/training/XuooW" target="_blank" rel="noopener">XuooW</a></td><td>Crushing, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:41:22 (54m ago)</td></tr><tr><td><a href="https://lichess.org/training/yKnbH" target="_blank" rel="noopener">yKnbH</a></td><td>Crushing, Fork, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:37:31 (58m ago)</td></tr><tr><td><a href="https://lichess.org/training/jNACj" target="_blank" rel="noopener">jNACj</a></td><td>Crushing, Opening, sacrifice, Short Tactic</td><td>1</td><td>2025-09-10 08:37:05 (59m ago)</td></tr><tr><td><a href="https://lichess.org/training/oIHwJ" target="_blank" rel="noopener">oIHwJ</a></td><td>Advantage, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:36:41 (59m ago)</td></tr><tr><td><a href="https://lichess.org/training/ZSJlU" target="_blank" rel="noopener">ZSJlU</a></td><td>Advantage, capturingDefender, discoveredAttack, Middlegame</td><td>1</td><td>2025-09-10 08:36:19 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/khmwi" target="_blank" rel="noopener">khmwi</a></td><td>Crushing, Endgame, Fork, Short Tactic</td><td>1</td><td>2025-09-10 08:30:16 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/B7XVj" target="_blank" rel="noopener">B7XVj</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-10 08:29:22 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/0Q47e" target="_blank" rel="noopener">0Q47e</a></td><td>Master, mate, Mate in 1, One Move</td><td>1</td><td>2025-09-10 08:28:55 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/KRqqH" target="_blank" rel="noopener">KRqqH</a></td><td>Advantage, Deflection, Kingside Attack, Long Tactic</td><td>1</td><td>2025-09-10 08:27:03 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/scdBP" target="_blank" rel="noopener">scdBP</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>1</td><td>2025-09-10 08:26:39 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/HTL7l" target="_blank" rel="noopener">HTL7l</a></td><td>Advantage, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:26:24 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/wnwFt" target="_blank" rel="noopener">wnwFt</a></td><td>Crushing, Middlegame, Short Tactic, Skewer</td><td>1</td><td>2025-09-10 08:18:31 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/cOwXv" target="_blank" rel="noopener">cOwXv</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-10 08:02:10 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/Ypuxt" target="_blank" rel="noopener">Ypuxt</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>1</td><td>2025-09-10 07:59:33 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/NHdC9" target="_blank" rel="noopener">NHdC9</a></td><td>Advantage, discoveredAttack, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 07:59:01 (1h ago)</td></tr><tr><td><a href="https://lichess.org/training/nTTxr" target="_blank" rel="noopener">nTTxr</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:57:27 (10h ago)</td></tr><tr><td><a href="https://lichess.org/training/lekBO" target="_blank" rel="noopener">lekBO</a></td><td>mate, Mate in 2, Opening, Short Tactic</td><td>2</td><td>2025-09-09 22:38:53 (10h ago)</td></tr><tr><td><a href="https://lichess.org/training/fXCx3" target="_blank" rel="noopener">fXCx3</a></td><td>Endgame, Kingside Attack, mate, Mate in 2</td><td>2</td><td>2025-09-09 22:38:30 (10h ago)</td></tr><tr><td><a href="https://lichess.org/training/Reihy" target="_blank" rel="noopener">Reihy</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:28:10 (11h ago)</td></tr><tr><td><a href="https://lichess.org/training/OWMrn" target="_blank" rel="noopener">OWMrn</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 22:27:51 (11h ago)</td></tr><tr><td><a href="https://lichess.org/training/sqyQH" target="_blank" rel="noopener">sqyQH</a></td><td>Hanging Piece, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-09 22:19:00 (11h ago)</td></tr><tr><td><a href="https://lichess.org/training/qJvdS" target="_blank" rel="noopener">qJvdS</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-09 22:18:25 (11h ago)</td></tr><tr><td><a href="https://lichess.org/training/aLJuc" target="_blank" rel="noopener">aLJuc</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-09 20:02:17 (13h ago)</td></tr><tr><td><a href="https://lichess.org/training/aBSWL" target="_blank" rel="noopener">aBSWL</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-09 18:25:30 (15h ago)</td></tr><tr><td><a href="https://lichess.org/training/wIl7C" target="_blank" rel="noopener">wIl7C</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>4</td><td>2025-09-09 17:03:03 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/oTcth" target="_blank" rel="noopener">oTcth</a></td><td>Crushing, Endgame, Master, pawnEndgame</td><td>3</td><td>2025-09-09 17:02:18 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/kIP5H" target="_blank" rel="noopener">kIP5H</a></td><td>mate, Mate in 1, One Move, Opening</td><td>4</td><td>2025-09-09 17:01:51 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/fxXHs" target="_blank" rel="noopener">fxXHs</a></td><td>Crushing, Deflection, Endgame, Master</td><td>3</td><td>2025-09-09 16:59:41 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/S81sg" target="_blank" rel="noopener">S81sg</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>4</td><td>2025-09-09 16:58:48 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/LjYnH" target="_blank" rel="noopener">LjYnH</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>3</td><td>2025-09-09 16:57:06 (16h ago)</td></tr><tr><td><a href="https://lichess.org/training/Asj1r" target="_blank" rel="noopener">Asj1r</a></td><td>Advantage, Endgame, Long Tactic, Pin</td><td>5</td><td>2025-09-09 07:25:53 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/wIl7C" target="_blank" rel="noopener">wIl7C</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>4</td><td>2025-09-09 07:25:01 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/kIP5H" target="_blank" rel="noopener">kIP5H</a></td><td>mate, Mate in 1, One Move, Opening</td><td>4</td><td>2025-09-09 07:24:47 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/wIl7C" target="_blank" rel="noopener">wIl7C</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>4</td><td>2025-09-08 21:53:10 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/Utjao" target="_blank" rel="noopener">Utjao</a></td><td>mate, Mate in 1, One Move, Opening</td><td>3</td><td>2025-09-08 21:52:50 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/42YCz" target="_blank" rel="noopener">42YCz</a></td><td>Kingside Attack, Master, mate, Mate in 1</td><td>4</td><td>2025-09-08 21:51:15 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/O0qfX" target="_blank" rel="noopener">O0qfX</a></td><td>Crushing, Middlegame, Pin, Short Tactic</td><td>3</td><td>2025-09-08 21:49:51 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/LjYnH" target="_blank" rel="noopener">LjYnH</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>3</td><td>2025-09-08 21:49:04 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/0FJ9d" target="_blank" rel="noopener">0FJ9d</a></td><td>Crushing, Deflection, Endgame, Exposed King</td><td>4</td><td>2025-09-08 21:44:28 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/rQbn2" target="_blank" rel="noopener">rQbn2</a></td><td>Advantage, Endgame, Master, Short Tactic</td><td>3</td><td>2025-09-08 20:54:58 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/oTcth" target="_blank" rel="noopener">oTcth</a></td><td>Crushing, Endgame, Master, pawnEndgame</td><td>3</td><td>2025-09-08 20:54:36 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/lMV3p" target="_blank" rel="noopener">lMV3p</a></td><td>Advantage, Fork, Master, Opening</td><td>3</td><td>2025-09-08 20:54:23 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/fxXHs" target="_blank" rel="noopener">fxXHs</a></td><td>Crushing, Deflection, Endgame, Master</td><td>3</td><td>2025-09-08 20:53:33 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/Jz5tF" target="_blank" rel="noopener">Jz5tF</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>4</td><td>2025-09-08 19:28:36 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/jUQaW" target="_blank" rel="noopener">jUQaW</a></td><td>advancedPawn, Crushing, Endgame, promotion</td><td>3</td><td>2025-09-08 18:44:40 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/hkpRs" target="_blank" rel="noopener">hkpRs</a></td><td>Advantage, Long Tactic, Master, Middlegame</td><td>3</td><td>2025-09-08 18:44:35 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/kIP5H" target="_blank" rel="noopener">kIP5H</a></td><td>mate, Mate in 1, One Move, Opening</td><td>4</td><td>2025-09-08 18:16:51 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/hXjrX" target="_blank" rel="noopener">hXjrX</a></td><td>mate, Mate in 2, Middlegame, Short Tactic</td><td>4</td><td>2025-09-08 18:16:19 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/YEMxL" target="_blank" rel="noopener">YEMxL</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>3</td><td>2025-09-08 18:01:24 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/WMeOn" target="_blank" rel="noopener">WMeOn</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>3</td><td>2025-09-08 18:01:10 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/S81sg" target="_blank" rel="noopener">S81sg</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>4</td><td>2025-09-08 18:00:59 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/Asj1r" target="_blank" rel="noopener">Asj1r</a></td><td>Advantage, Endgame, Long Tactic, Pin</td><td>5</td><td>2025-09-08 17:54:10 (1d ago)</td></tr><tr><td><a href="https://lichess.org/training/LFS54" target="_blank" rel="noopener">LFS54</a></td><td>Crushing, Deflection, Fork, Long Tactic</td><td>1</td><td>2025-09-07 21:50:33 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/OYp22" target="_blank" rel="noopener">OYp22</a></td><td>Crushing, Endgame, Exposed King, Fork</td><td>1</td><td>2025-09-07 21:50:24 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/Fa6KF" target="_blank" rel="noopener">Fa6KF</a></td><td>Advantage, Middlegame, Short Tactic</td><td>1</td><td>2025-09-07 21:49:48 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/O0qfX" target="_blank" rel="noopener">O0qfX</a></td><td>Crushing, Middlegame, Pin, Short Tactic</td><td>3</td><td>2025-09-07 21:49:18 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/wIl7C" target="_blank" rel="noopener">wIl7C</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>4</td><td>2025-09-07 20:55:46 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/30Dd3" target="_blank" rel="noopener">30Dd3</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-07 20:55:16 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/wGgE3" target="_blank" rel="noopener">wGgE3</a></td><td>Advantage, Endgame, Fork, Master</td><td>1</td><td>2025-09-07 20:54:33 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/LjYnH" target="_blank" rel="noopener">LjYnH</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>3</td><td>2025-09-07 13:21:37 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/RyQR8" target="_blank" rel="noopener">RyQR8</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>3</td><td>2025-09-07 12:59:00 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/RyQR8" target="_blank" rel="noopener">RyQR8</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>3</td><td>2025-09-07 12:59:00 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/96VCX" target="_blank" rel="noopener">96VCX</a></td><td>Crushing, Endgame, Fork, Short Tactic</td><td>2</td><td>2025-09-07 12:26:17 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/yUc79" target="_blank" rel="noopener">yUc79</a></td><td>Crushing, Endgame, Fork, Master</td><td>1</td><td>2025-09-07 12:20:18 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/SIbf0" target="_blank" rel="noopener">SIbf0</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-07 12:18:32 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/WxfBF" target="_blank" rel="noopener">WxfBF</a></td><td>Advantage, Fork, Middlegame, Short Tactic</td><td>1</td><td>2025-09-07 12:13:43 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/ausUF" target="_blank" rel="noopener">ausUF</a></td><td>Crushing, Endgame, Queen+Rook Endgame, Short Tactic</td><td>1</td><td>2025-09-07 12:12:27 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/G1tft" target="_blank" rel="noopener">G1tft</a></td><td>Advantage, discoveredAttack, Endgame, Short Tactic</td><td>1</td><td>2025-09-07 12:07:00 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/OWMrn" target="_blank" rel="noopener">OWMrn</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-07 12:06:38 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/fxXHs" target="_blank" rel="noopener">fxXHs</a></td><td>Crushing, Deflection, Endgame, Master</td><td>3</td><td>2025-09-07 12:06:04 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/sWt1E" target="_blank" rel="noopener">sWt1E</a></td><td>Deflection, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-07 11:58:53 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/RlmW8" target="_blank" rel="noopener">RlmW8</a></td><td>Advantage, Deflection, Endgame, Pin</td><td>2</td><td>2025-09-07 11:58:35 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/J2NtI" target="_blank" rel="noopener">J2NtI</a></td><td>Advantage, Endgame, Short Tactic</td><td>1</td><td>2025-09-07 11:55:01 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/7mX1k" target="_blank" rel="noopener">7mX1k</a></td><td>Crushing, Endgame, Exposed King, Long Tactic</td><td>1</td><td>2025-09-07 11:54:18 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/2GLYg" target="_blank" rel="noopener">2GLYg</a></td><td>Endgame, mate, Mate in 1, One Move</td><td>2</td><td>2025-09-07 11:52:28 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/vFyB2" target="_blank" rel="noopener">vFyB2</a></td><td>Advantage, attraction, capturingDefender, Master</td><td>1</td><td>2025-09-07 11:34:04 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/H0yWK" target="_blank" rel="noopener">H0yWK</a></td><td>advancedPawn, Crushing, Endgame, Short Tactic</td><td>1</td><td>2025-09-07 11:27:09 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/lMV3p" target="_blank" rel="noopener">lMV3p</a></td><td>Advantage, Fork, Master, Opening</td><td>3</td><td>2025-09-07 11:26:24 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/ZoVRQ" target="_blank" rel="noopener">ZoVRQ</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>2</td><td>2025-09-07 11:25:58 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/PkZpq" target="_blank" rel="noopener">PkZpq</a></td><td>Crushing, Endgame, Long Tactic, pawnEndgame</td><td>1</td><td>2025-09-07 11:25:17 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/fXCx3" target="_blank" rel="noopener">fXCx3</a></td><td>Endgame, Kingside Attack, mate, Mate in 2</td><td>2</td><td>2025-09-07 11:25:11 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/N7EkN" target="_blank" rel="noopener">N7EkN</a></td><td>Advantage, discoveredAttack, Kingside Attack, Opening</td><td>1</td><td>2025-09-07 11:24:17 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/jUQaW" target="_blank" rel="noopener">jUQaW</a></td><td>advancedPawn, Crushing, Endgame, promotion</td><td>3</td><td>2025-09-07 11:23:27 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/Jz5tF" target="_blank" rel="noopener">Jz5tF</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>4</td><td>2025-09-07 11:14:53 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/ufaio" target="_blank" rel="noopener">ufaio</a></td><td>Advantage, Endgame, Short Tactic</td><td>1</td><td>2025-09-07 11:14:11 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/nTTxr" target="_blank" rel="noopener">nTTxr</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-07 11:14:03 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/cNogS" target="_blank" rel="noopener">cNogS</a></td><td>Crushing, Kingside Attack, Opening, Short Tactic</td><td>1</td><td>2025-09-07 11:13:47 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/Utjao" target="_blank" rel="noopener">Utjao</a></td><td>mate, Mate in 1, One Move, Opening</td><td>3</td><td>2025-09-07 11:13:28 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/FqQq0" target="_blank" rel="noopener">FqQq0</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-07 11:13:25 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/42YCz" target="_blank" rel="noopener">42YCz</a></td><td>Kingside Attack, Master, mate, Mate in 1</td><td>4</td><td>2025-09-07 11:13:21 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/tBKuj" target="_blank" rel="noopener">tBKuj</a></td><td>Advantage, Middlegame, Short Tactic</td><td>1</td><td>2025-09-07 11:12:51 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/Zf2a5" target="_blank" rel="noopener">Zf2a5</a></td><td>Endgame, mate, Mate in 1, One Move</td><td>2</td><td>2025-09-07 11:12:35 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/fJFbK" target="_blank" rel="noopener">fJFbK</a></td><td>Master, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-07 11:12:26 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/KENZC" target="_blank" rel="noopener">KENZC</a></td><td>Advantage, Endgame, Fork, Short Tactic</td><td>1</td><td>2025-09-07 11:07:14 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/drG16" target="_blank" rel="noopener">drG16</a></td><td>Advantage, Kingside Attack, Long Tactic, Middlegame</td><td>1</td><td>2025-09-07 11:07:04 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/3uDPZ" target="_blank" rel="noopener">3uDPZ</a></td><td>attraction, Crushing, Endgame, Exposed King</td><td>1</td><td>2025-09-07 10:58:10 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/rQvPS" target="_blank" rel="noopener">rQvPS</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>1</td><td>2025-09-07 10:57:23 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/oKBgk" target="_blank" rel="noopener">oKBgk</a></td><td>Fork, Long Tactic, mate, Mate in 3</td><td>1</td><td>2025-09-07 10:16:58 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/JElbT" target="_blank" rel="noopener">JElbT</a></td><td>Crushing, Endgame, Long Tactic, pawnEndgame</td><td>2</td><td>2025-09-07 10:12:19 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/rQbn2" target="_blank" rel="noopener">rQbn2</a></td><td>Advantage, Endgame, Master, Short Tactic</td><td>3</td><td>2025-09-07 09:43:09 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/oTcth" target="_blank" rel="noopener">oTcth</a></td><td>Crushing, Endgame, Master, pawnEndgame</td><td>3</td><td>2025-09-07 09:42:22 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/MtVSF" target="_blank" rel="noopener">MtVSF</a></td><td>Crushing, Endgame, Long Tactic, Skewer</td><td>1</td><td>2025-09-07 09:41:23 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/b0PAY" target="_blank" rel="noopener">b0PAY</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-07 09:40:22 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/hkpRs" target="_blank" rel="noopener">hkpRs</a></td><td>Advantage, Long Tactic, Master, Middlegame</td><td>3</td><td>2025-09-07 09:40:07 (2d ago)</td></tr><tr><td><a href="https://lichess.org/training/qrhO2" target="_blank" rel="noopener">qrhO2</a></td><td>attackingF2F7, mate, Mate in 1, One Move</td><td>3</td><td>2025-09-07 09:31:44 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/N5yjD" target="_blank" rel="noopener">N5yjD</a></td><td>Advantage, discoveredAttack, Opening, Short Tactic</td><td>1</td><td>2025-09-07 09:31:17 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/lVE7U" target="_blank" rel="noopener">lVE7U</a></td><td>Crushing, discoveredAttack, Opening, Short Tactic</td><td>1</td><td>2025-09-07 09:30:53 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/yTuFW" target="_blank" rel="noopener">yTuFW</a></td><td>Kingside Attack, mate, Mate in 1, One Move</td><td>2</td><td>2025-09-07 09:30:22 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/EWXF4" target="_blank" rel="noopener">EWXF4</a></td><td>mate, Mate in 1, One Move, Opening</td><td>2</td><td>2025-09-07 09:30:00 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/0rNah" target="_blank" rel="noopener">0rNah</a></td><td>Advantage, Opening, Short Tactic</td><td>2</td><td>2025-09-07 09:26:11 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/vkFyc" target="_blank" rel="noopener">vkFyc</a></td><td>Advantage, Opening, Short Tactic</td><td>1</td><td>2025-09-07 09:25:49 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/YCYxa" target="_blank" rel="noopener">YCYxa</a></td><td>Advantage, Fork, Opening, Short Tactic</td><td>1</td><td>2025-09-07 09:25:06 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/lekBO" target="_blank" rel="noopener">lekBO</a></td><td>mate, Mate in 2, Opening, Short Tactic</td><td>2</td><td>2025-09-07 09:24:31 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/cn1wD" target="_blank" rel="noopener">cn1wD</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-07 09:22:51 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Yk9y2" target="_blank" rel="noopener">Yk9y2</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-07 09:22:40 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Reihy" target="_blank" rel="noopener">Reihy</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-07 09:18:18 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/yEZ2e" target="_blank" rel="noopener">yEZ2e</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-07 09:18:09 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/tUPEM" target="_blank" rel="noopener">tUPEM</a></td><td>Advantage, Fork, Opening, Short Tactic</td><td>1</td><td>2025-09-07 09:12:38 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Bmyu4" target="_blank" rel="noopener">Bmyu4</a></td><td>bishopEndgame, Crushing, Endgame, Long Tactic</td><td>1</td><td>2025-09-07 09:12:29 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/yoGlH" target="_blank" rel="noopener">yoGlH</a></td><td>Long Tactic, mate, Mate in 3, Middlegame</td><td>1</td><td>2025-09-07 09:09:15 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/0FJ9d" target="_blank" rel="noopener">0FJ9d</a></td><td>Crushing, Deflection, Endgame, Exposed King</td><td>4</td><td>2025-09-07 09:09:07 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/B9S24" target="_blank" rel="noopener">B9S24</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-07 09:08:44 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/nIdef" target="_blank" rel="noopener">nIdef</a></td><td>advancedPawn, Crushing, Deflection, Endgame</td><td>1</td><td>2025-09-07 08:52:33 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/NQVN7" target="_blank" rel="noopener">NQVN7</a></td><td>Crushing, Middlegame, Pin, Short Tactic</td><td>2</td><td>2025-09-07 00:08:57 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/LFIC7" target="_blank" rel="noopener">LFIC7</a></td><td>mate, Mate in 2, Middlegame, Short Tactic</td><td>2</td><td>2025-09-06 23:36:07 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/xFVsp" target="_blank" rel="noopener">xFVsp</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-06 23:35:41 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/GhBSW" target="_blank" rel="noopener">GhBSW</a></td><td>mate, Mate in 2, Middlegame, Short Tactic</td><td>2</td><td>2025-09-06 23:34:22 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/sqyQH" target="_blank" rel="noopener">sqyQH</a></td><td>Hanging Piece, mate, Mate in 1, Middlegame</td><td>2</td><td>2025-09-06 23:33:18 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/HmQUF" target="_blank" rel="noopener">HmQUF</a></td><td>Endgame, mate, Mate in 2, Rook Endgame</td><td>2</td><td>2025-09-06 23:29:54 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/gvAKv" target="_blank" rel="noopener">gvAKv</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 23:28:24 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/rcaFD" target="_blank" rel="noopener">rcaFD</a></td><td>Deflection, Endgame, Long Tactic, mate</td><td>1</td><td>2025-09-06 23:24:34 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/DnCEd" target="_blank" rel="noopener">DnCEd</a></td><td>Long Tactic, mate, Mate in 3, Middlegame</td><td>2</td><td>2025-09-06 23:24:15 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/AoyG1" target="_blank" rel="noopener">AoyG1</a></td><td>mate, Mate in 1, One Move, Opening</td><td>2</td><td>2025-09-06 23:22:48 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/S81sg" target="_blank" rel="noopener">S81sg</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>4</td><td>2025-09-06 23:20:52 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/y48wM" target="_blank" rel="noopener">y48wM</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 23:18:23 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/aLJuc" target="_blank" rel="noopener">aLJuc</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 23:17:50 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/hXjrX" target="_blank" rel="noopener">hXjrX</a></td><td>mate, Mate in 2, Middlegame, Short Tactic</td><td>4</td><td>2025-09-06 23:08:49 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/tAO11" target="_blank" rel="noopener">tAO11</a></td><td>Endgame, mate, Mate in 1, One Move</td><td>2</td><td>2025-09-06 23:06:40 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/AX9E5" target="_blank" rel="noopener">AX9E5</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 22:49:48 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/aBSWL" target="_blank" rel="noopener">aBSWL</a></td><td>Endgame, mate, Mate in 2, Short Tactic</td><td>2</td><td>2025-09-06 21:45:54 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/vrIYH" target="_blank" rel="noopener">vrIYH</a></td><td>Crushing, Endgame, Hanging Piece, Long Tactic</td><td>1</td><td>2025-09-06 21:38:56 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/kIP5H" target="_blank" rel="noopener">kIP5H</a></td><td>mate, Mate in 1, One Move, Opening</td><td>4</td><td>2025-09-06 21:37:57 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/uKOJJ" target="_blank" rel="noopener">uKOJJ</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>1</td><td>2025-09-06 21:11:50 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Yrktd" target="_blank" rel="noopener">Yrktd</a></td><td>Crushing, Endgame, Fork, Pin</td><td>2</td><td>2025-09-06 21:03:46 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/pTayd" target="_blank" rel="noopener">pTayd</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>1</td><td>2025-09-06 21:02:51 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/rEWLI" target="_blank" rel="noopener">rEWLI</a></td><td>Crushing, Endgame, Long Tactic, Pin</td><td>1</td><td>2025-09-06 20:51:48 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Asj1r" target="_blank" rel="noopener">Asj1r</a></td><td>Advantage, Endgame, Long Tactic, Pin</td><td>5</td><td>2025-09-06 20:44:59 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/YEMxL" target="_blank" rel="noopener">YEMxL</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>3</td><td>2025-09-06 19:37:50 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/1GlBh" target="_blank" rel="noopener">1GlBh</a></td><td>Endgame, mate, Mate in 2, Pin</td><td>2</td><td>2025-09-06 19:35:48 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/vEf1H" target="_blank" rel="noopener">vEf1H</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 19:34:13 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/rQMUN" target="_blank" rel="noopener">rQMUN</a></td><td>Advantage, Opening, Pin, Short Tactic</td><td>1</td><td>2025-09-06 19:33:57 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/C5K8P" target="_blank" rel="noopener">C5K8P</a></td><td>Master, Master vs Master, mate, Mate in 1</td><td>2</td><td>2025-09-06 19:33:39 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Jk8GA" target="_blank" rel="noopener">Jk8GA</a></td><td>Crushing, Defensive Move, Endgame, Pin</td><td>2</td><td>2025-09-06 19:33:05 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/sSP3A" target="_blank" rel="noopener">sSP3A</a></td><td>Crushing, Endgame, Pin, Short Tactic</td><td>1</td><td>2025-09-06 19:27:46 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/gSLd5" target="_blank" rel="noopener">gSLd5</a></td><td>Crushing, Endgame, Pin, Queen+Rook Endgame</td><td>2</td><td>2025-09-06 19:26:16 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/WMeOn" target="_blank" rel="noopener">WMeOn</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>3</td><td>2025-09-06 19:24:43 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/nkHkF" target="_blank" rel="noopener">nkHkF</a></td><td>Crushing, Fork, Middlegame, Pin</td><td>1</td><td>2025-09-06 19:23:18 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/9Pv4C" target="_blank" rel="noopener">9Pv4C</a></td><td>Clearance, Crushing, Endgame, Long Tactic</td><td>2</td><td>2025-09-06 19:21:07 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/nPDvP" target="_blank" rel="noopener">nPDvP</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 19:16:55 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/oM7bT" target="_blank" rel="noopener">oM7bT</a></td><td>Crushing, Endgame, Pin, Queen+Rook Endgame</td><td>1</td><td>2025-09-06 19:14:17 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/uwDEx" target="_blank" rel="noopener">uwDEx</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>1</td><td>2025-09-06 19:12:41 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/t2dJL" target="_blank" rel="noopener">t2dJL</a></td><td>Advantage, Middlegame, Pin, Short Tactic</td><td>1</td><td>2025-09-06 18:42:36 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/qJvdS" target="_blank" rel="noopener">qJvdS</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>2</td><td>2025-09-06 18:39:28 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/hTOtn" target="_blank" rel="noopener">hTOtn</a></td><td>Crushing, Endgame, Pin, Short Tactic</td><td>2</td><td>2025-09-06 18:39:04 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/4J4a2" target="_blank" rel="noopener">4J4a2</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>2</td><td>2025-09-06 18:38:52 (3d ago)</td></tr><tr><td><a href="https://lichess.org/training/Zfn5F" target="_blank" rel="noopener">Zfn5F</a></td><td>Crushing, Endgame, Pin, Short Tactic</td><td>2</td><td>2025-09-06 18:36:06 (3d ago)</td></tr></tbody></table><div class="pager"></div>
+    </section>
+
+    <section id="due-plus1"><h2>+1 Day (21)</h2><table id="plus1-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:6ch"><col style="width:auto"><col style="width:5ch"><col style="width:28ch"><col style="width:12ch"></colgroup><thead><tr><th>Puzzle</th><th>Theme</th><th>Attempts</th><th>Last Attempt</th><th>Due</th></tr></thead><tbody><tr><td><a href="https://lichess.org/training/0Q47e" target="_blank" rel="noopener">0Q47e</a></td><td>Master, mate, Mate in 1, One Move</td><td>1</td><td>2025-09-10 08:28:55 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/33oPp" target="_blank" rel="noopener">33oPp</a></td><td>Crushing, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:44:42 (51m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/4mZyf" target="_blank" rel="noopener">4mZyf</a></td><td>Crushing, discoveredAttack, Kingside Attack, Middlegame</td><td>1</td><td>2025-09-10 09:07:13 (29m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/9etwQ" target="_blank" rel="noopener">9etwQ</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>1</td><td>2025-09-10 08:44:05 (52m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/AuhTR" target="_blank" rel="noopener">AuhTR</a></td><td>Advantage, Fork, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:45:37 (50m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/B7XVj" target="_blank" rel="noopener">B7XVj</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-10 08:29:22 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/HTL7l" target="_blank" rel="noopener">HTL7l</a></td><td>Advantage, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:26:24 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/KRqqH" target="_blank" rel="noopener">KRqqH</a></td><td>Advantage, Deflection, Kingside Attack, Long Tactic</td><td>1</td><td>2025-09-10 08:27:03 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/NHdC9" target="_blank" rel="noopener">NHdC9</a></td><td>Advantage, discoveredAttack, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 07:59:01 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/XuooW" target="_blank" rel="noopener">XuooW</a></td><td>Crushing, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:41:22 (54m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/Ypuxt" target="_blank" rel="noopener">Ypuxt</a></td><td>mate, Mate in 1, Middlegame, One Move</td><td>1</td><td>2025-09-10 07:59:33 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/ZSJlU" target="_blank" rel="noopener">ZSJlU</a></td><td>Advantage, capturingDefender, discoveredAttack, Middlegame</td><td>1</td><td>2025-09-10 08:36:19 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/cOwXv" target="_blank" rel="noopener">cOwXv</a></td><td>Kingside Attack, mate, Mate in 2, Middlegame</td><td>1</td><td>2025-09-10 08:02:10 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/iVFoz" target="_blank" rel="noopener">iVFoz</a></td><td>Advantage, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:45:17 (51m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/jNACj" target="_blank" rel="noopener">jNACj</a></td><td>Crushing, Opening, sacrifice, Short Tactic</td><td>1</td><td>2025-09-10 08:37:05 (59m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/khmwi" target="_blank" rel="noopener">khmwi</a></td><td>Crushing, Endgame, Fork, Short Tactic</td><td>1</td><td>2025-09-10 08:30:16 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/oIHwJ" target="_blank" rel="noopener">oIHwJ</a></td><td>Advantage, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:36:41 (59m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/scdBP" target="_blank" rel="noopener">scdBP</a></td><td>Kingside Attack, mate, Mate in 1, Middlegame</td><td>1</td><td>2025-09-10 08:26:39 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/wlZLa" target="_blank" rel="noopener">wlZLa</a></td><td>Advantage, Fork, Long Tactic, Middlegame</td><td>1</td><td>2025-09-10 08:42:28 (53m ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/wnwFt" target="_blank" rel="noopener">wnwFt</a></td><td>Crushing, Middlegame, Short Tactic, Skewer</td><td>1</td><td>2025-09-10 08:18:31 (1h ago)</td><td>2025-09-11</td></tr><tr><td><a href="https://lichess.org/training/yKnbH" target="_blank" rel="noopener">yKnbH</a></td><td>Crushing, Fork, Middlegame, Short Tactic</td><td>1</td><td>2025-09-10 08:37:31 (58m ago)</td><td>2025-09-11</td></tr></tbody></table><div class="pager"></div></section>
+    <section id="due-p7"><h2>+2–7 Days (0)</h2><table id="p7-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:6ch"><col style="width:auto"><col style="width:5ch"><col style="width:28ch"><col style="width:12ch"></colgroup><thead><tr><th>Puzzle</th><th>Theme</th><th>Attempts</th><th>Last Attempt</th><th>Due</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>0</td><td>—</td><td>—</td></tr></tbody></table><div class="pager"></div></section>
+    <section id="due-later"><h2>Later (0)</h2><table id="later-table" class="filterable paged" data-page-size="10"><colgroup><col style="width:6ch"><col style="width:auto"><col style="width:5ch"><col style="width:28ch"><col style="width:12ch"></colgroup><thead><tr><th>Puzzle</th><th>Theme</th><th>Attempts</th><th>Last Attempt</th><th>Due</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>0</td><td>—</td><td>—</td></tr></tbody></table><div class="pager"></div></section>
+
+    <div class="small">Generated 2025-09-10 09:36:21 BST</div>
+  </main>
+</div>
+
+<script>
+(function(){
+  const REPORT_DATE = "2025-09-10";
+  const LS_KEY = "dueQueueState"; // { date, ids[], idx }
+  const PERSIST_ACROSS_DAYS = true;
+
+  function rowsOf(table){ return Array.from(table.querySelectorAll('tbody tr')); }
+  function textOfRow(tr){ return tr.innerText.toLowerCase(); }
+
+  // ---- filtering marks rows instead of removing from pagination set
+  function applyFilter(table, query){
+    const q = (query || "").trim().toLowerCase();
+    rowsOf(table).forEach(tr => {
+      const hide = q && !textOfRow(tr).includes(q);
+      tr.dataset.filtered = hide ? "1" : "0";             // <-- mark filtered
+      tr.style.display = hide ? "none" : "";              // for immediate UX
+    });
+    paginateTable(table); // re-page based on filtered set
+  }
+
+  // ---- pagination uses only non-filtered rows
+  function paginateTable(table){
+    const ps = parseInt(table.dataset.pageSize || "10", 10);
+    const body = table.tBodies[0];
+    const all = Array.from(body.rows);
+    const eligible = all.filter(r => r.dataset.filtered !== "1");   // <-- key fix
+    const pager = (table.nextElementSibling && table.nextElementSibling.classList.contains('pager'))
+      ? table.nextElementSibling : null;
+    if(!pager) return;
+
+    // current page
+    let cur = parseInt(table.dataset.pageIndex || "0", 10);
+    const pages = Math.max(Math.ceil(eligible.length / ps), 1);
+    if(cur >= pages) cur = pages - 1;
+    table.dataset.pageIndex = String(cur);
+
+    // show eligible rows on current page; hide the rest
+    eligible.forEach((tr, i) => {
+      const page = Math.floor(i / ps);
+      tr.style.visibility = (page === cur) ? "" : "hidden";
+      tr.style.display    = (page === cur) ? "" : "none";
+    });
+    // filtered rows remain hidden
+    all.forEach(tr => {
+      if(tr.dataset.filtered === "1"){
+        tr.style.display = "none";
+        tr.style.visibility = "hidden";
+      }
+    });
+
+    // build pager
+    pager.innerHTML = "";
+    function btn(label, disabled, onClick, active=false){
+      const b = document.createElement('button');
+      b.type = "button";
+      b.textContent = label;
+      if(disabled) b.disabled = true;
+      if(active) b.classList.add('active');
+      b.addEventListener('click', onClick);
+      pager.appendChild(b);
+    }
+    btn("«", cur===0, ()=>{ table.dataset.pageIndex="0"; paginateTable(table); });
+    btn("‹", cur===0, ()=>{ table.dataset.pageIndex=String(cur-1); paginateTable(table); });
+
+    const maxButtons = 7;
+    const start = Math.max(0, cur - Math.floor(maxButtons/2));
+    const end = Math.min(pages, start + maxButtons);
+    for(let i=start;i<end;i++){
+      btn(String(i+1), false, ()=>{ table.dataset.pageIndex=String(i); paginateTable(table); }, i===cur);
+    }
+
+    btn("›", cur>=pages-1, ()=>{ table.dataset.pageIndex=String(cur+1); paginateTable(table); });
+    btn("»", cur>=pages-1, ()=>{ table.dataset.pageIndex=String(pages-1); paginateTable(table); });
+  }
+
+  // init filter + pagination for every paged/filterable table
+  document.querySelectorAll('table.paged').forEach(t => {
+    // mark all rows as not filtered initially
+    rowsOf(t).forEach(tr => tr.dataset.filtered = tr.dataset.filtered || "0");
+    paginateTable(t);
+  });
+
+  document.querySelectorAll('.controls').forEach(ctrl => {
+    const section = ctrl.closest('section');
+    const table = section.querySelector('table');
+    const input = ctrl.querySelector('input[type="text"]');
+    if(input && table){
+      input.addEventListener('input', () => applyFilter(table, input.value));
+    }
+  });
+
+  // ---- due-today queue controls ----
+  const dueTable = document.getElementById('due-today-table');
+  const shuffleEl = document.getElementById('shuffle-due');
+  const batchSel  = document.getElementById('batch-n');
+
+  function visibleIdsFrom(table){
+    return rowsOf(table)
+      .filter(tr => tr.dataset.filtered !== "1" && tr.style.display !== 'none')
+      .map(tr => tr.querySelector('td a')?.textContent.trim())
+      .filter(Boolean);
+  }
+  let queue = visibleIdsFrom(dueTable).map(id => 'https://lichess.org/training/' + id);
+  let idx   = 0;
+
+  function saveState(){
+    try {
+      const ids = queue.map(u => u.split('/').pop());
+      localStorage.setItem(LS_KEY, JSON.stringify({ date: REPORT_DATE, ids, idx }));
+    } catch(e) {}
+  }
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return null;
+      const obj = JSON.parse(raw);
+      if(!obj) return null;
+      if(!PERSIST_ACROSS_DAYS && obj.date !== REPORT_DATE) return null;
+      return obj;
+    } catch(e) { return null; }
+  }
+  function arraysEqual(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
+
+  (function initQueue(){
+    const idsNow = visibleIdsFrom(dueTable);
+    const state = loadState();
+    if(state && arraysEqual(state.ids, idsNow)){
+      queue = state.ids.map(id => 'https://lichess.org/training/' + id);
+      idx = Math.min(state.idx||0, queue.length?queue.length-1:0);
+    } else {
+      queue = idsNow.map(id => 'https://lichess.org/training/' + id);
+      idx = 0;
+      saveState();
+    }
+  })();
+
+  function rebuildQueue(preserveCurrent=false){
+    let ids = visibleIdsFrom(dueTable);
+    if(shuffleEl && shuffleEl.checked){
+      for(let i=ids.length-1;i>0;--i){ const j=Math.floor(Math.random()*(i+1)); [ids[i],ids[j]]=[ids[j],ids[i]]; }
+    }
+    const oldCurrent = queue[idx]?.split('/').pop() || null;
+    queue = ids.map(id => 'https://lichess.org/training/' + id);
+    if(preserveCurrent && oldCurrent){
+      const newIdx = queue.findIndex(u => u.endsWith('/'+oldCurrent));
+      idx = newIdx>=0 ? newIdx : 0;
+    } else idx = 0;
+    saveState();
+  }
+
+  function openUrl(u){ window.open(u, '_blank', 'noopener'); }
+  function openWithHashQueue(){
+    rebuildQueue(false);
+    if(queue.length===0) return;
+    const ids = queue.map(u => u.split('/').pop());
+    const first = ids[0];
+    const rest  = ids.slice(1).join('.');
+    const url = 'https://lichess.org/training/' + first + (rest ? ('#q=' + rest) : '');
+    idx = 0; saveState();
+    openUrl(url);
+  }
+  function openNext(){ if(queue.length){ idx = Math.min(idx+1, queue.length-1); saveState(); openUrl(queue[idx]); } }
+  function openBatch(n){
+    if(queue.length===0) return;
+    const start = idx;
+    for(let k=0; k<n && (start+k)<queue.length; k++){ setTimeout(() => openUrl(queue[start+k]), 120*k); }
+    idx = Math.min(start + n - 1, queue.length-1);
+    saveState();
+  }
+
+  const ctrls = document.querySelector('#due-today .controls');
+  if(ctrls){
+    const filterEl = ctrls.querySelector('input[type="text"]');
+    if(filterEl) filterEl.addEventListener('input', () => rebuildQueue(true));
+    if(shuffleEl) shuffleEl.addEventListener('change', () => rebuildQueue(false));
+    ctrls.querySelector('[data-open="first"]').addEventListener('click', openWithHashQueue);
+    ctrls.querySelector('[data-open="next"]').addEventListener('click',  openNext);
+    ctrls.querySelector('[data-open="batch"]').addEventListener('click', () => {
+      const n = parseInt(batchSel.value, 10) || 10;
+      openBatch(n);
+    });
+    ctrls.querySelector('[data-reset"]').addEventListener('click', () => {
+      queue = visibleIdsFrom(dueTable).map(id => 'https://lichess.org/training/' + id); idx = 0; saveState();
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('table.paged').forEach(t => paginateTable(t));
+  });
+})();
+</script>
