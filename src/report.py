@@ -1,26 +1,89 @@
-# report.py
+# src/report.py
 import os
+import re
+from collections import Counter
 from datetime import date, datetime, timezone
 from pathlib import Path
-from collections import Counter
+
 from sqlalchemy import text
 
-# ------------ CONFIG ------------
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-1] Overview / Index / Archive helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+DATE_HTML_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.html$")
+
+def _write_overview_index_archive(docs_dir: Path, today_html: Path, report_date_str: str) -> None:
+    """
+    Writes:
+      - overview.html  → copy of the lifetime tracker (index.html)
+      - archive.html   → list of all YYYY-MM-DD.html
+    NOTE: This helper no longer writes index.html (the tracker is written in run()).
+    """
+    docs_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1) overview.html = copy of the tracker (lifetime overview)
+    index_html_path = docs_dir / "index.html"
+    if index_html_path.exists():
+        overview_html = index_html_path.read_text(encoding="utf-8")
+        (docs_dir / "overview.html").write_text(overview_html, encoding="utf-8")
+
+    # 2) gather all YYYY-MM-DD.html for archive
+    dates: list[str] = []
+    for p in docs_dir.iterdir():
+        m = DATE_HTML_RE.match(p.name)
+        if m:
+            dates.append(m.group(1))
+    dates.sort(reverse=True)
+
+    # 3) archive.html
+    lis = "\n".join(f'<li><a href="{d}.html">{d}</a></li>' for d in dates)
+    archive_html = f"""<!doctype html>
+<meta charset="utf-8">
+<title>Archive — Chess Reports</title>
+<style>
+  body {{ font: 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial; max-width: 780px; margin: 40px auto; padding: 0 16px; color:#0f172a; }}
+  h1 {{ margin: 0 0 8px; }}
+  a {{ color:#2563eb; text-decoration: none; }}
+  a:hover {{ text-decoration: underline; }}
+</style>
+<h1>Archive</h1>
+<p>Total: {len(dates)}</p>
+<ol reversed>
+{lis}
+</ol>
+"""
+    (docs_dir / "archive.html").write_text(archive_html, encoding="utf-8")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-2] Config
+# ─────────────────────────────────────────────────────────────────────────────
+
 THEME_COUNT = 4  # show up to N themes per row in tables
 QUEUE_PERSIST = os.getenv("REPORT_QUEUE_PERSIST", "true").lower() in ("1","true","yes","on")
 INCLUDE_OVERDUE = os.getenv("INCLUDE_OVERDUE", "false").lower() in ("1","true","yes","on")
-PAGE_SIZE = int(os.getenv("REPORT_PAGE_SIZE", "10"))  # default rows per page
+PAGE_SIZE = int(os.getenv("REPORT_PAGE_SIZE", "10"))  # default rows per page (consistent size)
 
-# ------------ SQL ------------
+
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-3] SQL
+# ─────────────────────────────────────────────────────────────────────────────
+
 KPI = text("""
 SELECT COUNT(*) AS attempts,
        ROUND(100.0*AVG(CASE WHEN result='win' THEN 1.0 ELSE 0.0 END),1) AS acc
 FROM attempts WHERE user_id=1
 """)
-KPI7  = text("""SELECT ROUND(100.0*AVG(CASE WHEN result='win' THEN 1.0 ELSE 0.0 END),1) AS acc7
-                FROM attempts WHERE user_id=1 AND attempted_at >= datetime('now','-7 day')""")
-KPI30 = text("""SELECT ROUND(100.0*AVG(CASE WHEN result='win' THEN 1.0 ELSE 0.0 END),1) AS acc30
-                FROM attempts WHERE user_id=1 AND attempted_at >= datetime('now','-30 day')""")
+
+KPI7  = text("""
+SELECT ROUND(100.0*AVG(CASE WHEN result='win' THEN 1.0 ELSE 0.0 END),1) AS acc7
+FROM attempts WHERE user_id=1 AND attempted_at >= datetime('now','-7 day')
+""")
+
+KPI30 = text("""
+SELECT ROUND(100.0*AVG(CASE WHEN result='win' THEN 1.0 ELSE 0.0 END),1) AS acc30
+FROM attempts WHERE user_id=1 AND attempted_at >= datetime('now','-30 day')
+""")
 
 MISSED_30 = text("""
 SELECT a.puzzle_id, p.themes, a.attempted_at,
@@ -35,6 +98,7 @@ SELECT p.themes AS themes_csv, a.result AS result
 FROM attempts a JOIN puzzles p ON p.puzzle_id=a.puzzle_id
 WHERE a.user_id=1 AND a.attempted_at >= datetime('now','-90 day')
 """)
+
 THEME_ROWS_ALL = text("""
 SELECT p.themes AS themes_csv, a.result AS result
 FROM attempts a JOIN puzzles p ON p.puzzle_id=a.puzzle_id
@@ -67,7 +131,11 @@ DUE_PLUS1      = text(DUE_TPL.format(where="s.due_date = date('now','localtime',
 DUE_2_7        = text(DUE_TPL.format(where="s.due_date BETWEEN date('now','localtime','+2 day') AND date('now','localtime','+7 day')"))
 DUE_LATER      = text(DUE_TPL.format(where="s.due_date > date('now','localtime','+7 day')"))
 
-# ------------ helpers ------------
+
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-4] Helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
 LABELS = {
     "rookEndgame":"Rook Endgame","endgame":"Endgame","middlegame":"Middlegame","opening":"Opening",
     "mateIn1":"Mate in 1","mateIn2":"Mate in 2","mateIn3":"Mate in 3","smotheredMate":"Smothered Mate",
@@ -104,7 +172,11 @@ def _first_themes(themes_csv: str, n=THEME_COUNT) -> str:
 
 def _acc(attempts, wins): return round(100.0 * wins / attempts, 1) if attempts else None
 
-# ---------- HTML table renderers ----------
+
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-5] HTML table renderers
+# ─────────────────────────────────────────────────────────────────────────────
+
 def _html_table(headers, rows, col_specs, table_id=None, extra_classes="", page_size=PAGE_SIZE):
     colgroup = "".join(f'<col style="width:{w}">' for w in col_specs)
     thead = "<thead><tr>" + "".join(f"<th>{h}</th>" for h in headers) + "</tr></thead>"
@@ -121,8 +193,7 @@ def _html_table(headers, rows, col_specs, table_id=None, extra_classes="", page_
 
 def _html_due(rows, table_id=None):
     headers = ["Puzzle","Theme","Attempts","Last Attempt","Due"]
-    # widen Last Attempt to keep single line
-    col_specs = ["6ch","auto","5ch","28ch","12ch"]
+    col_specs = ["6ch","auto","5ch","28ch","12ch"]  # ensure consistent widths
     if not rows:
         return _html_table(headers, [["—","—","0","—","—"]], col_specs, table_id, "filterable paged")
     out = []
@@ -139,7 +210,6 @@ def _html_due(rows, table_id=None):
 
 def _html_missed(rows, table_id=None):
     headers = ["Puzzle","Theme","Attempts","When"]
-    # widen When to keep single line
     col_specs = ["6ch","auto","5ch","28ch"]
     if not rows:
         return _html_table(headers, [["—","—","0","—"]], col_specs, table_id, "filterable paged")
@@ -164,7 +234,11 @@ def _html_themes(agg, title, table_id=None):
     caption = f"<h2>{title}</h2>"
     return caption + _html_table(headers, rows, col_specs, table_id, "filterable paged")
 
-# ------------ main ------------
+
+# ─────────────────────────────────────────────────────────────────────────────
+# [RP-6] main
+# ─────────────────────────────────────────────────────────────────────────────
+
 def run(engine, outdir: str = "reports"):
     out = Path(outdir); out.mkdir(parents=True, exist_ok=True)
 
@@ -552,6 +626,7 @@ td,th{{ font-variant-numeric: tabular-nums; }}
     <h2>Navigation</h2>
     <nav>
       <a href="{date.today().isoformat()}.html">Today’s Report →</a>
+      <a href="archive.html">Archive →</a>
       <a href="#kpis">Stats</a>
       <a href="#queues">SRS Queues</a>
       <a href="#recent">Recent Attempts</a>
@@ -670,6 +745,12 @@ td,th{{ font-variant-numeric: tabular-nums; }}
 """
         (out / "index.html").write_text(tracker_head + TRACKER_JS, encoding="utf-8")
         print(f"[report] Wrote {out / 'index.html'}")
+
+        # update overview/index/archive (NEW)
+        _write_overview_index_archive(out, daily_path, date.today().isoformat())
+        print(f"[report] Wrote {out / 'overview.html'}")
+        print(f"[report] Wrote {out / 'index.html'}")
+        print(f"[report] Wrote {out / 'archive.html'}")
 
     # minimal Markdown (kept for continuity)
     md_path = out / f"{date.today().isoformat()}.md"

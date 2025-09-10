@@ -1,11 +1,19 @@
-# update.py — orchestrates: init DB -> sync puzzles -> sync attempts -> compute SRS -> render report
+# --- make sibling modules importable when running src/update.py directly ---
 import os
 import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve()
+sys.path.insert(0, str(HERE.parent))          # add .../Chess/src
+sys.path.insert(0, str(HERE.parent.parent))   # add .../Chess (so `import db` works)
+# --------------------------------------------------------------------------
+
+# Orchestrator: init DB -> sync puzzles -> sync attempts -> compute SRS -> render report
 import time
 import importlib
-from pathlib import Path
 from datetime import datetime
-import shutil, subprocess, os
+import shutil
+import subprocess
 
 def backup_db(db_path: str, backups_dir: str = "backups"):
     Path(backups_dir).mkdir(parents=True, exist_ok=True)

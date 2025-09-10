@@ -3,8 +3,11 @@ import os
 from datetime import datetime, timezone
 from typing import List, Tuple, Optional
 from sqlalchemy import text
-from db import get_engine
 
+try:
+    from .db import get_engine
+except ImportError:
+    from db import get_engine
 # ---------------- env helpers ----------------
 def _env_bool(name: str, default: bool) -> bool:
     v = os.getenv(name, str(default)).lower()
@@ -29,8 +32,15 @@ WIN_CADENCE     = _parse_cadence(os.getenv("SRS_WIN_CADENCE"),  [2,4,7,14,30,60,
 RESET_ON_FAIL   = _env_bool("SRS_RESET_ON_FAIL", True)
 
 SEED_MODE        = _env_str("SRS_SEED_MODE", "tomorrow")   # "tomorrow" | "stagger"
-STAGGER_BUCKETS  = int(os.getenv("SRS_STAGGER_BUCKETS", "7"))
+def _env_int(name: str, default: int) -> int:
+    v = os.getenv(name, str(default))
+    v = v.split("#", 1)[0].strip()   # drop inline comments if present
+    try:
+        return int(v)
+    except Exception:
+        return default
 
+STAGGER_BUCKETS  = _env_int("SRS_STAGGER_BUCKETS", 7)
 # --------------- SQL ----------------
 SQL_LAST_ATTEMPT = text("""
 SELECT a.puzzle_id,
